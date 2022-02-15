@@ -13,7 +13,20 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        try {
+            $users = User::all();
+            return response()->json([
+                'success' => true,
+                'data' => $users,
+                'message' => 'User(s) found',
+            ], 500);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Internal server error',
+                'data' => NULL,
+            ], 500);
+        }
     }
 
     /**

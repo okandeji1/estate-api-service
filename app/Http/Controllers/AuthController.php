@@ -35,7 +35,7 @@ class AuthController extends Controller
             if(!$role){
                 return response()->json([
                     'success' => false,
-                    'message' => 'Record not found'
+                    'message' => 'Role not found'
                 ], 400);
             }
 
@@ -57,7 +57,6 @@ class AuthController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'new user created successfully',
                 'data' => [
                     'username' => $user->username,
                     'role' => $user->role->user_type,
@@ -65,7 +64,8 @@ class AuthController extends Controller
                     'lastName' => $user->lastName,
                     'created_at' => $user->username,
                 ],
-                'token' => $token
+                'token' => $token,
+                'message' => 'new user created successfully'
             ], 201);
         } catch (\Throwable $th) {
             return response()->json([
@@ -112,13 +112,6 @@ class AuthController extends Controller
 
     public function logout()
     {
-        return response()->json([
-            'success' => true,
-            'data' => null,
-            'message' => 'Successfully logged out'
-        ], 200);
-
-        // auth()->logout();
         auth()->user()->tokens()->delete();
         return response()->json([
             'success' => true,

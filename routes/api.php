@@ -1,8 +1,11 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\User;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PropertyController;
+use App\Http\Controllers\PropertyTypeController;
+use App\Http\Controllers\PropertyCategoryController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -24,17 +27,25 @@ Route::prefix('v1/auth')->group(function () {
     Route::get('/logout', [AuthController::class,'logout']);
 });
 
-Route::post('/role', [RoleController::class, 'store']);
 
 // User routes
 Route::group([
     'middleware' => ['auth:sanctum'],
     'prefix' => 'v1/users'
 ], function () {
-    Route::get('/get-users', [AuthController::class,'index']);
-    Route::get('/{id}', [AuthController::class, 'show']);
+    Route::get('/get-users', [User::class,'index']);
 });
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+// Property routes
+Route::group([
+    'middleware' => ['auth:sanctum'],
+    'prefix' => 'v1/properties'
+], function () {
+    Route::get('/get-property-types', [PropertyTypeController::class, 'index']);
+    Route::post('/property-type', [PropertyTypeController::class,'store']);
+
+    Route::get('/get-property-categories', [PropertyCategoryController::class, 'index']);
+    Route::post('/property-category', [PropertyCategoryController::class, 'store']);
+
+    Route::post('/add-property', [PropertyController::class, 'store']);
 });

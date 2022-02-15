@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StorePropertyCategoryRequest;
 use App\Http\Requests\UpdatePropertyCategoryRequest;
 use App\Models\PropertyCategory;
+use Ramsey\Uuid\Uuid;
 
 class PropertyCategoryController extends Controller
 {
@@ -15,7 +16,20 @@ class PropertyCategoryController extends Controller
      */
     public function index()
     {
-        //
+        try {
+            $propertyCategories = PropertyCategory::all();
+            return response()->json([
+                'success' => true,
+                'data' => $propertyCategories,
+                'message' => 'Property category(s) found',
+            ], 500);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Internal server error',
+                'data' => NULL,
+            ], 500);
+        }
     }
 
     /**
@@ -26,7 +40,28 @@ class PropertyCategoryController extends Controller
      */
     public function store(StorePropertyCategoryRequest $request)
     {
-        //
+        try {
+            // Retrieve the validated input data...
+            $validated = $request->validated();
+            // Save entity
+            $propertyCategory = new PropertyCategory();
+            $propertyCategory->uuid = Uuid::uuid4();
+            $propertyCategory->property_category = $validated['property_category'];
+            $propertyCategory->save();
+
+            return response()->json([
+                'success' => true,
+                'data' => $propertyCategory->property_category,
+                'message' => 'New property category created successfully',
+            ], 201);
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'data' => NULL,
+                'message' => 'Internal server error',
+            ], 500);
+        }
     }
 
     /**

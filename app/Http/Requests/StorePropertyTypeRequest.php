@@ -13,7 +13,7 @@ class StorePropertyTypeRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,7 @@ class StorePropertyTypeRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'property_type' => 'required|string'
         ];
     }
 }
