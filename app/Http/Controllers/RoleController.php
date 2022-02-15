@@ -31,7 +31,7 @@ class RoleController extends Controller
         try {
             // Retrieve the validated input data...
             $validated = $request->validated();
-            // Role model
+            // Save entity
             $role = new Role();
             $role->uuid = Uuid::uuid4();
             $role->user_type = Str::upper($validated['user_type']);
@@ -39,8 +39,8 @@ class RoleController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'New role created successfully',
                 'data' => $role->user_type,
+                'message' => 'New role created successfully',
             ], 201);
 
         } catch (\Throwable $th) {

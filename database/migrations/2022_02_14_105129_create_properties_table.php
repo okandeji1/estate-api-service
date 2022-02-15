@@ -24,9 +24,9 @@ class CreatePropertiesTable extends Migration
             $table->string('address');
             $table->string('city');
             $table->string('state');
-            $table->string('country');
-            $table->string('landmark');
-            $table->integer('click_counts');
+            $table->string('country')->default('Nigeria');
+            $table->string('landmark')->nullable();
+            $table->integer('click_counts')->default(0);
             $table->integer('number_of_bedrooms')->default(1);
             $table->integer('number_of_floors')->default(0);
             $table->integer('number_of_bathrooms')->default(1);
@@ -34,7 +34,7 @@ class CreatePropertiesTable extends Migration
             $table->double('longitude')->nullable();
             $table->double('latitude')->nullable();
             $table->integer('square_metre')->default(0);
-            $table->string('image')->nullable();
+            $table->text('image')->nullable();
             $table->string('video_url')->nullable();
             $table->tinyInteger('is_featured')->default(0);
             $table->tinyInteger('is_expired')->default(0);
