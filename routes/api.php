@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PropertyController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -23,13 +24,15 @@ Route::prefix('v1/auth')->group(function () {
     Route::get('/logout', [AuthController::class,'logout']);
 });
 
+Route::post('/role', [RoleController::class, 'store']);
+
 // User routes
 Route::group([
     'middleware' => ['auth:sanctum'],
     'prefix' => 'v1/users'
-], function ($router) {
-    Route::post('/user-login', [AuthController::class, 'login']);
-    Route::get('/user-logout', [AuthController::class,'logout']);
+], function () {
+    Route::get('/get-users', [AuthController::class,'index']);
+    Route::get('/{id}', [AuthController::class, 'show']);
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

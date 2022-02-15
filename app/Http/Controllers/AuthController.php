@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\RegisterValidator;
+use App\Http\Requests\LoginValidator;
 use App\Models\User;
+use App\Models\Role;
 use Ramsey\Uuid\Uuid;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
@@ -23,63 +26,88 @@ class AuthController extends Controller
      */
     public function register(RegisterValidator $request)
     {
-        $validated = $request->validated();
-        // $validated = $request->safe()->only(['name', 'email']);
+        try {
+            // Retrieve the validated input data...
+            $validated = $request->validated();
 
-        $user = User::create([
-            'uuid' => Uuid::uuid4(),
-            'name' => $fields['name'],
-            'email' => $fields['email'],
-            'password' => bcrypt($fields['password']),
-        ]);
+            $role = Role::where('user_type', $validated['user_type'])->first();
 
-        $token = $user->createToken('septemconnect')->plainTextToken;
+            if(!$role){
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Record not found'
+                ], 400);
+            }
 
-        return response()->json([
-            'success' => true,
-            // 'data' => $user,
-            'message' => 'Registration successful. Please login'
-        ], 201);
-    }
+            $role_id = $role->id;
 
-    public function login(Request $request)
-    {
-        return response()->json([
-            'success' => true,
-            // 'data' => $user,
-            'message' => 'Registration successful. Please login'
-        ], 201);
+            $user = new User();
+            $user->uuid = Uuid::uuid4();
+            $user->firstName = $validated['firstName'];
+            $user->lastName = $validated['lastName'];
+            $user->username = $validated['username'];
+            $user->password = bcrypt($validated['password']);
+            $user->email = $validated['email'];
+            $user->role_id = $role_id;
+            $user->is_admin = $role_id === 1 ? 1 : 0;
+            $user->phoneNumber = $validated['phoneNumber'];
+            $user->save();
 
-        $fields = $request->validate([
-            'email' => 'required|string|email',
-            'name' => 'required|string',
-        ]);
+            $token = $user->createToken('septemconnect')->plainTextToken;
 
-        // failed validation
-        // if($fields->fails()){
-        //     return response()->json([
-        //         'success' => false,
-        //         'message' => $fields->errors()
-        //     ], 400);
-        // }
-
-        // Check email
-        $user = User::where('email', $fields['email'])->first();
-        // Check password
-        if(!$user || !Hash::check($fields['password'], $user->password)){
+            return response()->json([
+                'success' => true,
+                'message' => 'new user created successfully',
+                'data' => [
+                    'username' => $user->username,
+                    'role' => $user->role->user_type,
+                    'firstName' => $user->firstName,
+                    'lastName' => $user->lastName,
+                    'created_at' => $user->username,
+                ],
+                'token' => $token
+            ], 201);
+        } catch (\Throwable $th) {
             return response()->json([
                 'success' => false,
-                'message' => 'Invalid email or password'
-            ], 401);
+                'message' => 'Internal server error',
+                'data' => NULL,
+            ], 500);
         }
+    }
 
-        $token = $user->createToken('septemconnect')->plainTextToken;
+    public function login(LoginValidator $request)
+    {
+        try {
+            // Retrieve the validated input data...
+            $validated = $request->validated();
+            // Check email
+            $user = User::where('email', $validated['email'])->first();
+            // Check password
+            if(!$user || !Hash::check($validated['password'], $user->password)){
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Invalid email or password'
+                ], 401);
+            }
 
-        return response()->json([
-            'success' => true,
-            'data' => $user,
-            'message' => 'Registration successful. Please login'
-        ], 201);
+            $token = $user->createToken('septemconnect')->plainTextToken;
+
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'user' => $user,
+                ],
+                'token' => $token,
+                'message' => 'Login successfully.'
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Internal server error',
+                'data' => NULL,
+            ], 500);
+        }
     }
 
     public function logout()
@@ -93,9 +121,9 @@ class AuthController extends Controller
         // auth()->logout();
         auth()->user()->tokens()->delete();
         return response()->json([
-                'success' => true,
-                'data' => null,
-                'message' => 'Successfully logged out'
-            ], 200);
+            'success' => true,
+            'data' => null,
+            'message' => 'Successfully logged out'
+        ], 200);
     }
 }

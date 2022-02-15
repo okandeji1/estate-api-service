@@ -29,6 +29,8 @@ class RegisterValidator extends FormRequest
             'username' => 'required|string',
             'email' => 'required|string|unique:users,email',
             'password' => 'required|string|min:6|confirmed',
+            'user_type' => 'required|string|exists:roles,user_type',
+            'phoneNumber' => 'sometimes|required|numeric'
         ];
     }
 }

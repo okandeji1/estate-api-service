@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreRoleRequest;
 use App\Http\Requests\UpdateRoleRequest;
 use App\Models\Role;
+use Illuminate\Support\Str;
+use Ramsey\Uuid\Uuid;
 
 class RoleController extends Controller
 {
@@ -26,7 +28,28 @@ class RoleController extends Controller
      */
     public function store(StoreRoleRequest $request)
     {
-        //
+        try {
+            // Retrieve the validated input data...
+            $validated = $request->validated();
+            // Role model
+            $role = new Role();
+            $role->uuid = Uuid::uuid4();
+            $role->user_type = Str::upper($validated['user_type']);
+            $role->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'New role created successfully',
+                'data' => $role->user_type,
+            ], 201);
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Internal server error',
+                'data' => NULL,
+            ], 500);
+        }
     }
 
     /**
