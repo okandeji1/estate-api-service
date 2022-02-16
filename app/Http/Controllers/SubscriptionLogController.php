@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreSubscriptionLogRequest;
 use App\Http\Requests\UpdateSubscriptionLogRequest;
 use App\Models\SubscriptionLog;
+use Ramsey\Uuid\Uuid;
 
 class SubscriptionLogController extends Controller
 {

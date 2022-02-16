@@ -6,6 +6,9 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\PropertyTypeController;
 use App\Http\Controllers\PropertyCategoryController;
+use App\Http\Controllers\FeatureController;
+use App\Http\Controllers\PackageController;
+use App\Http\Controllers\PackageCategoryController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -33,6 +36,7 @@ Route::group([
     'middleware' => ['auth:sanctum'],
     'prefix' => 'v1/users'
 ], function () {
+    Route::post('/add-role', [RoleController::class,'store']);
     Route::get('/get-users', [User::class,'index']);
 });
 
@@ -47,5 +51,19 @@ Route::group([
     Route::get('/get-property-categories', [PropertyCategoryController::class, 'index']);
     Route::post('/property-category', [PropertyCategoryController::class, 'store']);
 
+    Route::get('/get-features', [FeatureController::class, 'index']);
+    Route::post('/add-feature', [FeatureController::class, 'store']);
+
     Route::post('/add-property', [PropertyController::class, 'store']);
+});
+
+Route::group([
+    'middleware' => ['auth:sanctum'],
+    'prefix' => 'v1/packages'
+ ], function () {
+    Route::get('/get-package-categories', [PackageCategoryController::class, 'index']);
+    Route::post('/add-package-category', [PackageCategoryController::class, 'store']);
+
+    Route::get('/get-packages', [PackageController::class, 'index']);
+    Route::post('/add-package', [PackageController::class, 'index']);
 });

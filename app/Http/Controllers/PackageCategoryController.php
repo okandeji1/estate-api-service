@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StorePackageCategoryRequest;
 use App\Http\Requests\UpdatePackageCategoryRequest;
 use App\Models\PackageCategory;
+use Illuminate\Support\Str;
+use Ramsey\Uuid\Uuid;
 
 class PackageCategoryController extends Controller
 {
@@ -15,7 +17,20 @@ class PackageCategoryController extends Controller
      */
     public function index()
     {
-        //
+        try {
+            $packageCategory = PackageCategory::all();
+            return response()->json([
+                'success' => true,
+                'data' => $packageCategory,
+                'message' => 'Package category(s) found',
+            ], 500);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Internal server error',
+                'data' => NULL,
+            ], 500);
+        }
     }
 
     /**
@@ -26,7 +41,28 @@ class PackageCategoryController extends Controller
      */
     public function store(StorePackageCategoryRequest $request)
     {
-        //
+        try {
+            // Retrieve the validated input data...
+            $packageCategory = new PackageCategory();
+            foreach ($request->safe() as $key => $value) {
+                $packageCategory->$key = Str::upper($value);
+            }
+
+            $packageCategory->uuid = Uuid::uuid4();
+            $packageCategory->save();
+
+            return response()->json([
+                'success' => true,
+                'data' => $packageCategory,
+                'message' => 'New package category added successfully',
+            ], 201);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Internal server error',
+                'data' => Null,
+            ], 500);
+        }
     }
 
     /**

@@ -24,7 +24,7 @@ class StorePropertyCategoryRequest extends FormRequest
     public function rules()
     {
         return [
-            'property_category' => 'required|string'
+            'property_category' => 'required|string|unique:property_categories,property_category'
         ];
     }
 }

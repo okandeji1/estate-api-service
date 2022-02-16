@@ -41,17 +41,18 @@ class PropertyCategoryController extends Controller
     public function store(StorePropertyCategoryRequest $request)
     {
         try {
-            // Retrieve the validated input data...
-            $validated = $request->validated();
             // Save entity
             $propertyCategory = new PropertyCategory();
+            foreach ($request->safe() as $key => $value) {
+                $propertyCategory->$key = $value;
+            }
+
             $propertyCategory->uuid = Uuid::uuid4();
-            $propertyCategory->property_category = $validated['property_category'];
             $propertyCategory->save();
 
             return response()->json([
                 'success' => true,
-                'data' => $propertyCategory->property_category,
+                'data' => $propertyCategory,
                 'message' => 'New property category created successfully',
             ], 201);
 

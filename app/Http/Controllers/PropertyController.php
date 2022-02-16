@@ -55,7 +55,7 @@ class PropertyController extends Controller
     {
         try {
             // Retrieve the validated input data...
-            $validated = $request->safe()->except('images');
+            $validated = $request->safe()->only(['user_id', 'property_type_id', 'property_category_id']);
             // Process file upload to cloudinary
             if($request->hasFile('images')){
                 foreach($request->file('images') as $file){
@@ -121,11 +121,10 @@ class PropertyController extends Controller
                 'message' => 'New property added successfully'
             ], 201);
         } catch (\Throwable $th) {
-            throw $th;
             return response()->json([
                 'success' => false,
                 'message' => 'Internal server error',
-                'data' => $th,
+                'data' => Null,
             ], 500);
         }
     }

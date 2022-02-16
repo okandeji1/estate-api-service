@@ -33,8 +33,10 @@ class RoleController extends Controller
             $validated = $request->validated();
             // Save entity
             $role = new Role();
+            foreach ($request->safe() as $key => $value) {
+                $role->$key = Str::upper($value);
+            }
             $role->uuid = Uuid::uuid4();
-            $role->user_type = Str::upper($validated['user_type']);
             $role->save();
 
             return response()->json([

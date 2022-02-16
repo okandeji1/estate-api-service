@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StorePostCategoryRequest;
 use App\Http\Requests\UpdatePostCategoryRequest;
 use App\Models\PostCategory;
+use Ramsey\Uuid\Uuid;
 
 class PostCategoryController extends Controller
 {
@@ -26,7 +27,27 @@ class PostCategoryController extends Controller
      */
     public function store(StorePostCategoryRequest $request)
     {
-        //
+        try {
+            //code...
+            $postCategory = new PostCategory();
+            foreach ($request->safe() as $key => $value) {
+                $postCategory->$key = $value;
+            }
+
+            $postCategory->save();
+
+            return response()->json([
+                'success' => true,
+                'data' => $postCategory,
+                'message' => 'New package category added successfully',
+            ], 201);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Internal server error',
+                'data' => Null,
+            ], 500);
+        }
     }
 
     /**

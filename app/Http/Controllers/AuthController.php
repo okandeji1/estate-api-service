@@ -28,7 +28,7 @@ class AuthController extends Controller
     {
         try {
             // Retrieve the validated input data...
-            $validated = $request->validated();
+            $validated = $request->safe()->only('user_type');
 
             $role = Role::where('user_type', $validated['user_type'])->first();
 
@@ -42,15 +42,22 @@ class AuthController extends Controller
             $role_id = $role->id;
 
             $user = new User();
+
+            foreach ($request->safe() as $key => $value) {
+                if ($key === 'user_type'){
+                    continue;
+                }
+
+                if ($key === 'password'){
+                    $user->$key = bcrypt($value);
+                    continue;
+                }
+                $user->$key = $value;
+            }
+
             $user->uuid = Uuid::uuid4();
-            $user->firstName = $validated['firstName'];
-            $user->lastName = $validated['lastName'];
-            $user->username = $validated['username'];
-            $user->password = bcrypt($validated['password']);
-            $user->email = $validated['email'];
             $user->role_id = $role_id;
             $user->is_admin = $role_id === 1 ? 1 : 0;
-            $user->phoneNumber = $validated['phoneNumber'];
             $user->save();
 
             $token = $user->createToken('septemconnect')->plainTextToken;
@@ -58,13 +65,9 @@ class AuthController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => [
-                    'username' => $user->username,
-                    'role' => $user->role->user_type,
-                    'firstName' => $user->firstName,
-                    'lastName' => $user->lastName,
-                    'created_at' => $user->username,
+                 'user' =>  $user,
+                'token' => $token
                 ],
-                'token' => $token,
                 'message' => 'new user created successfully'
             ], 201);
         } catch (\Throwable $th) {
@@ -97,8 +100,8 @@ class AuthController extends Controller
                 'success' => true,
                 'data' => [
                     'user' => $user,
+                    'token' => $token,
                 ],
-                'token' => $token,
                 'message' => 'Login successfully.'
             ], 200);
         } catch (\Throwable $th) {

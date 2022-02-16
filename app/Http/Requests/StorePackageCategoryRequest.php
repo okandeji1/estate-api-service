@@ -13,7 +13,7 @@ class StorePackageCategoryRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,7 @@ class StorePackageCategoryRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'package_category' => 'required|string|unique:package_categories,package_category'
         ];
     }
 }
