@@ -18,7 +18,9 @@ class PropertyPolicy
      */
     public function viewAny(User $user)
     {
-        //
+        if ($user->isAdministrator()) {
+            return true;
+        }
     }
 
     /**

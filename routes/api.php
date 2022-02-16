@@ -36,6 +36,7 @@ Route::group([
     'middleware' => ['auth:sanctum'],
     'prefix' => 'v1/users'
 ], function () {
+    // FIXME: prepare all users routes
     Route::post('/add-role', [RoleController::class,'store']);
     Route::get('/get-users', [User::class,'index']);
 });
@@ -65,5 +66,5 @@ Route::group([
     Route::post('/add-package-category', [PackageCategoryController::class, 'store']);
 
     Route::get('/get-packages', [PackageController::class, 'index']);
-    Route::post('/add-package', [PackageController::class, 'index']);
+    Route::post('/add-package', [PackageController::class, 'store']);
 });
