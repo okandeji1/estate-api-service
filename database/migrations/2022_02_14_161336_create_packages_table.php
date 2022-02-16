@@ -19,10 +19,10 @@ class CreatePackagesTable extends Migration
             $table->unsignedBigInteger('package_category_id');
             $table->string('name')->nullable();
             $table->integer('price')->default(0);
-            $table->integer('percentage_save')->default(0);
-            $table->integer('number_of_listing')->default(0);
-            $table->integer('limit_purchase')->default(0);
-            $table->integer('month')->default(3);
+            $table->string('percentage_save')->default(0);
+            $table->string('number_of_listing')->default(0);
+            $table->string('limit_purchase')->default(0);
+            $table->string('month')->default(3);
             $table->string('description');
             $table->tinyInteger('is_default')->default(0);
             $table->tinyInteger('is_enabled')->default(0);

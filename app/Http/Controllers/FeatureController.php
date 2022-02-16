@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreFeatureRequest;
 use App\Http\Requests\UpdateFeatureRequest;
 use App\Models\Feature;
+use Ramsey\Uuid\Uuid;
 
 class FeatureController extends Controller
 {
@@ -15,7 +16,20 @@ class FeatureController extends Controller
      */
     public function index()
     {
-        //
+        try {
+            $features = Feature::all();
+            return response()->json([
+                'success' => true,
+                'data' => $features,
+                'message' => 'Feature(s) found',
+            ], 500);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Internal server error',
+                'data' => NULL,
+            ], 500);
+        }
     }
 
     /**
@@ -26,7 +40,30 @@ class FeatureController extends Controller
      */
     public function store(StoreFeatureRequest $request)
     {
-        //
+        try {
+
+            $feature = new Feature();
+
+            foreach ($request->safe() as $key => $value) {
+                $feature->$key = $value;
+            }
+
+            $feature->uuid = Uuid::uuid4();
+            $feature->save();
+
+            return response()->json([
+                'success' => true,
+                'data' => $feature,
+                'message' => 'New feature added successfully',
+            ], 201);
+        } catch (\Throwable $th) {
+            throw $th;
+            return response()->json([
+                'success' => false,
+                'message' => 'Internal server error',
+                'data' => Null,
+            ], 500);
+        }
     }
 
     /**

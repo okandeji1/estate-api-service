@@ -13,7 +13,7 @@ class StoreFeatureRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,7 @@ class StoreFeatureRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'property_feature' => 'required|string|unique:features,property_feature'
         ];
     }
 }

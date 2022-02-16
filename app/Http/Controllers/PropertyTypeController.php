@@ -41,17 +41,18 @@ class PropertyTypeController extends Controller
     public function store(StorePropertyTypeRequest $request)
     {
         try {
-            // Retrieve the validated input data...
-            $validated = $request->validated();
-            // Role model
+            // Code here...
             $propertyType = new PropertyType();
+            foreach ($request->safe() as $key => $value) {
+                $propertyType->$key = $value;
+            }
+
             $propertyType->uuid = Uuid::uuid4();
-            $propertyType->property_type = $validated['property_type'];
             $propertyType->save();
 
             return response()->json([
                 'success' => true,
-                'data' => $propertyType->property_type,
+                'data' => $propertyType,
                 'message' => 'New property type created successfully',
             ], 201);
 
