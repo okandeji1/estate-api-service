@@ -66,7 +66,7 @@ class AuthController extends Controller
                 'success' => true,
                 'data' => [
                  'user' =>  $user,
-                'token' => $token
+                'accessToken' => $token
                 ],
                 'message' => 'new user created successfully'
             ], 201);
@@ -100,7 +100,7 @@ class AuthController extends Controller
                 'success' => true,
                 'data' => [
                     'user' => $user,
-                    'token' => $token,
+                    'accessToken' => $token,
                 ],
                 'message' => 'Login successfully.'
             ], 200);
