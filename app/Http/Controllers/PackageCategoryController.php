@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePackageCategoryRequest;
 use App\Http\Requests\UpdatePackageCategoryRequest;
+use Illuminate\Http\Request;
 use App\Models\PackageCategory;
 use Illuminate\Support\Str;
 use Ramsey\Uuid\Uuid;

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePropertyRequest;
 use App\Http\Requests\UpdatePropertyRequest;
+use Illuminate\Http\Request;
 use App\Models\Property;
 use App\Models\PropertyCategory;
 use App\Models\PropertyType;
@@ -25,8 +26,31 @@ class PropertyController extends Controller
                 'success' => true,
                 'data' => $properties,
                 'message' => 'Property(s) found',
-            ], 500);
+            ], 200);
         } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Internal server error',
+                'data' => NULL,
+            ], 500);
+        }
+    }
+
+    /**
+     * get properties
+     */
+    public function getProperties(Request $request)
+    {
+        try {
+            //code...
+            $properties = Property::orderBy('created_at', 'desc');
+            return response()->json([
+                'success' => true,
+                'data' => $properties,
+                'message' => 'Property(s) found',
+            ], 200);
+        } catch (\Throwable $th) {
+            throw $th;
             return response()->json([
                 'success' => false,
                 'message' => 'Internal server error',

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePropertyCategoryRequest;
 use App\Http\Requests\UpdatePropertyCategoryRequest;
+use Illuminate\Http\Request;
 use App\Models\PropertyCategory;
 use Ramsey\Uuid\Uuid;
 

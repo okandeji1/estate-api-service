@@ -26,7 +26,7 @@ class RegisterValidator extends FormRequest
         return [
             'firstName' => 'required|string',
             'lastName' => 'required|string',
-            'username' => 'required|string',
+            // 'username' => 'required|string',
             'email' => 'required|string|unique:users,email',
             'password' => 'required|string|min:6|confirmed',
             'user_type' => 'required|string|exists:roles,user_type',

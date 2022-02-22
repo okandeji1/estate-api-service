@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\User;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\PropertyTypeController;
@@ -38,8 +38,9 @@ Route::group([
 ], function () {
     // FIXME: prepare all users routes
     Route::post('/add-role', [RoleController::class,'store']);
-    Route::get('/get-users', [User::class,'index']);
+    Route::get('/get-users', [UserController::class,'getUsers']);
 });
+Route::get('/v1/users/get-roles', [RoleController::class,'index']);
 
 // Property routes
 Route::group([
@@ -55,6 +56,7 @@ Route::group([
     Route::get('/get-features', [FeatureController::class, 'index']);
     Route::post('/add-feature', [FeatureController::class, 'store']);
 
+    Route::get('/get-properties', [PropertyController::class, 'index']);
     Route::post('/add-property', [PropertyController::class, 'store']);
 });
 

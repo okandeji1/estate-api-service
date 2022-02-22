@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePropertyFeatureRequest;
 use App\Http\Requests\UpdatePropertyFeatureRequest;
+use Illuminate\Http\Request;
 use App\Models\PropertyFeature;
 use App\Models\Property;
 use App\Models\Feature;

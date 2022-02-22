@@ -57,7 +57,8 @@ class AuthController extends Controller
 
             $user->uuid = Uuid::uuid4();
             $user->role_id = $role_id;
-            $user->is_admin = $role_id === 1 ? 1 : 0;
+            $user->role = $role->user_type;
+            $user->is_admin = $role->user_type === 'admin' || $role->user_type === 'super-admin'  ? 1 : 0;
             $user->save();
 
             $token = $user->createToken('septemconnect')->plainTextToken;
@@ -66,7 +67,6 @@ class AuthController extends Controller
                 'success' => true,
                 'data' => [
                  'user' =>  $user,
-                'accessToken' => $token
                 ],
                 'message' => 'new user created successfully'
             ], 201);

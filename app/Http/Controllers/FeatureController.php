@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreFeatureRequest;
 use App\Http\Requests\UpdateFeatureRequest;
+use Illuminate\Http\Request;
 use App\Models\Feature;
 use Ramsey\Uuid\Uuid;
 

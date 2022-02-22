@@ -1,8 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
+use App\Models\User;
 
 class UserController extends Controller
 {
@@ -19,7 +19,7 @@ class UserController extends Controller
                 'success' => true,
                 'data' => $users,
                 'message' => 'User(s) found',
-            ], 500);
+            ], 200);
         } catch (\Throwable $th) {
             return response()->json([
                 'success' => false,
@@ -28,6 +28,38 @@ class UserController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * Get users with search query
+     * @param $query
+     */
+
+     public function getUsers(Request $request)
+     {
+
+         try {
+            foreach ($request->query() as $key => $value){
+                $objKey = $key;
+                $objValue = $value;
+            }
+             //code...
+             $users = User::where($objKey, '=', $objValue)
+             ->orderBy('created_at', 'desc')
+             ->get();
+
+             return response()->json([
+                'success' => true,
+                'data' => $users,
+                'message' => 'User(s) found',
+            ], 200);
+         } catch (\Throwable $th) {
+             return response()->json([
+                'success' => false,
+                'message' => 'Internal server error',
+                'data' => NULL,
+            ], 500);
+         }
+     }
 
     /**
      * Store a newly created resource in storage.

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePostCategoryRequest;
 use App\Http\Requests\UpdatePostCategoryRequest;
+use Illuminate\Http\Request;
 use App\Models\PostCategory;
 use Ramsey\Uuid\Uuid;
 
