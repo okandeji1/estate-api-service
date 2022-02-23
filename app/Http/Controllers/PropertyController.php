@@ -43,7 +43,7 @@ class PropertyController extends Controller
     {
         try {
             //code...
-            $properties = Property::orderBy('created_at', 'desc');
+            $properties = Property::with('propertyCategory')->orderBy('created_at', 'desc')->get();
             return response()->json([
                 'success' => true,
                 'data' => $properties,

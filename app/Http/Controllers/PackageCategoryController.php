@@ -24,7 +24,7 @@ class PackageCategoryController extends Controller
                 'success' => true,
                 'data' => $packageCategory,
                 'message' => 'Package category(s) found',
-            ], 500);
+            ], 200);
         } catch (\Throwable $th) {
             return response()->json([
                 'success' => false,

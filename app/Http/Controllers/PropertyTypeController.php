@@ -23,7 +23,7 @@ class PropertyTypeController extends Controller
                 'success' => true,
                 'message' => 'Property type(s) found',
                 'data' => $propertyTypes,
-            ], 500);
+            ], 200);
         } catch (\Throwable $th) {
             return response()->json([
                 'success' => false,

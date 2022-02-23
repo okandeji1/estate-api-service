@@ -23,7 +23,7 @@ class PropertyCategoryController extends Controller
                 'success' => true,
                 'data' => $propertyCategories,
                 'message' => 'Property category(s) found',
-            ], 500);
+            ], 200);
         } catch (\Throwable $th) {
             return response()->json([
                 'success' => false,
